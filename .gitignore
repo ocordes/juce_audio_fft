@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+
+# specials to JUCE
+# needs confirmation and testing
+JuceLibraryCode/*
+Builds/MacOSX/build
