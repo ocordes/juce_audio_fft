@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="jEG3eU" name="juce_audio_fft" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyWebsite="www.chief-ocordes.de"
+<JUCERPROJECT id="AoRpE4" name="juce_audio_fft" projectType="audioplug" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" pluginFormats="buildVST3"
               companyName="Oliver Cordes" companyCopyright="(C) 2024 by Oliver Cordes"
-              companyEmail="ocordes@gmx.net" pluginFormats="buildStandalone,buildVST3"
-              pluginCharacteristicsValue="pluginIsSynth" pluginVST3Category="Fx,Pitch Shift,Reverb"
+              companyWebsite="www.chief-ocordes.de" companyEmail="ocordes@gmx.net"
               bundleIdentifier="com.OliverCordes.JuceAudioFFT">
-  <MAINGROUP id="GkER0E" name="juce_audio_fft">
-    <GROUP id="{4DA34359-BB08-DA6A-D4F3-E7820B85630A}" name="Source">
-      <FILE id="ETcaTe" name="FFTProcessor.cpp" compile="1" resource="0"
-            file="Source/FFTProcessor.cpp"/>
-      <FILE id="XPJzKg" name="FFTProcessor.h" compile="0" resource="0" file="Source/FFTProcessor.h"/>
-      <FILE id="QNikVk" name="PluginProcessor.cpp" compile="1" resource="0"
+  <MAINGROUP id="csFlUE" name="juce_audio_fft">
+    <GROUP id="{1AF59142-2A64-23F5-FE31-6FF28723F51A}" name="Source">
+      <FILE id="LjtJev" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="HuvxgX" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="aBttAh" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="HaSVVC" name="PluginEditor.cpp" compile="1" resource="0"
+      <FILE id="Lyxmrf" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
-      <FILE id="o8c4PM" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="kBbymV" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="Rv9MZm" name="FFTProcessor.cpp" compile="1" resource="0"
+            file="Source/FFTProcessor.cpp"/>
+      <FILE id="F6JaeT" name="FFTProcessor.h" compile="0" resource="0" file="Source/FFTProcessor.h"/>
     </GROUP>
   </MAINGROUP>
   <MODULES>
@@ -52,11 +51,11 @@
         <MODULEPATH id="juce_audio_utils" path="../../JUCE/JUCE-8.0.1/modules"/>
         <MODULEPATH id="juce_core" path="../../JUCE/JUCE-8.0.1/modules"/>
         <MODULEPATH id="juce_data_structures" path="../../JUCE/JUCE-8.0.1/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../JUCE/JUCE-8.0.1/modules"/>
         <MODULEPATH id="juce_events" path="../../JUCE/JUCE-8.0.1/modules"/>
         <MODULEPATH id="juce_graphics" path="../../JUCE/JUCE-8.0.1/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../JUCE/JUCE-8.0.1/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../JUCE/JUCE-8.0.1/modules"/>
-        <MODULEPATH id="juce_dsp" path="../../JUCE/JUCE-8.0.1/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>

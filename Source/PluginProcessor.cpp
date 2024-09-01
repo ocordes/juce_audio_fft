@@ -98,9 +98,6 @@ juce::AudioProcessorParameter* Juce_audio_fftAudioProcessor::getBypassParameter(
 //==============================================================================
 void Juce_audio_fftAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    
     setLatencySamples(fft[0].getLatencyInSamples());
 
     fft[0].reset();
@@ -113,7 +110,7 @@ void Juce_audio_fftAudioProcessor::releaseResources()
     // spare memory, etc.
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
+
 bool Juce_audio_fftAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
@@ -126,46 +123,53 @@ bool Juce_audio_fftAudioProcessor::isBusesLayoutSupported (const BusesLayout& la
     // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    {
         return false;
-
+    }
     // This checks if the input layout matches the output layout
    #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
+    {
         return false;
+    }
    #endif
 
     return true;
   #endif
 }
-#endif
+
 
 void Juce_audio_fftAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels  = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
+    auto numInputChannels = getTotalNumInputChannels();
+    auto numOutputChannels = getTotalNumOutputChannels();
+    auto numSamples = buffer.getNumSamples();
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+    
+    for (auto i = numInputChannels; i < numOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    
+    bool bypassed = apvts.getRawParameterValue("Bypass")->load();
+    
+    float* channelL = buffer.getWritePointer(0);
+    float* channelR = buffer.getWritePointer(1);
 
-        // ..do something to the data...
+    // Processing on a sample-by-sample basis:
+    for (int sample = 0; sample < numSamples; ++sample) {
+        float sampleL = channelL[sample];
+        float sampleR = channelR[sample];
+
+        sampleL = fft[0].processSample(sampleL, bypassed);
+        sampleR = fft[1].processSample(sampleR, bypassed);
+        sampleL *= 0.1f;
+        sampleR *= 0.1f;
+
+        channelL[sample] = sampleL;
+        channelR[sample] = sampleR;
     }
+    
 }
 
 //==============================================================================
@@ -182,15 +186,15 @@ juce::AudioProcessorEditor* Juce_audio_fftAudioProcessor::createEditor()
 //==============================================================================
 void Juce_audio_fftAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    copyXmlToBinary(*apvts.copyState().createXml(), destData);
 }
 
 void Juce_audio_fftAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<juce::XmlElement> xml(getXmlFromBinary(data, sizeInBytes));
+        if (xml.get() != nullptr && xml->hasTagName(apvts.state.getType())) {
+            apvts.replaceState(juce::ValueTree::fromXml(*xml));
+        }
 }
 
 juce::AudioProcessorValueTreeState::ParameterLayout Juce_audio_fftAudioProcessor::createParameterLayout()
@@ -204,7 +208,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout Juce_audio_fftAudioProcessor
 
     return layout;
 }
-
 
 //==============================================================================
 // This creates new instances of the plugin..

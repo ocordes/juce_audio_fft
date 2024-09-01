@@ -8,7 +8,7 @@
     <key>CFBundleIconFile</key>
     <string></string>
     <key>CFBundleIdentifier</key>
-    <string>com.OliverCordes.JuceAudioFFT</string>
+    <string>com.yourcompany.juce_audio_fft</string>
     <key>CFBundleName</key>
     <string>juce_audio_fft</string>
     <key>CFBundleDisplayName</key>
@@ -22,7 +22,7 @@
     <key>CFBundleVersion</key>
     <string>1.0.0</string>
     <key>NSHumanReadableCopyright</key>
-    <string>(C) 2024 by Oliver Cordes</string>
+    <string></string>
     <key>NSHighResolutionCapable</key>
     <true/>
   </dict>

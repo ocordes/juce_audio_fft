@@ -83,6 +83,7 @@ void FFTProcessor::processFrame(bool bypassed)
     window.multiplyWithWindowingTable(fftPtr, fftSize);
 
     if (!bypassed) {
+        
         // Perform the forward FFT.
         fft.performRealOnlyForwardTransform(fftPtr, true);
 
@@ -91,6 +92,10 @@ void FFTProcessor::processFrame(bool bypassed)
 
         // Perform the inverse FFT.
         fft.performRealOnlyInverseTransform(fftPtr);
+    }
+    else
+    {
+    
     }
 
     // Apply the window again for resynthesis.
@@ -116,6 +121,7 @@ void FFTProcessor::processSpectrum(float* data, int numBins)
     // but it's easier to deal with this as std::complex values.
     auto* cdata = reinterpret_cast<std::complex<float>*>(data);
 
+        
     for (int i = 0; i < numBins; ++i) {
         // Usually we want to work with the magnitude and phase rather
         // than the real and imaginary parts directly.
@@ -126,8 +132,11 @@ void FFTProcessor::processSpectrum(float* data, int numBins)
 
         // Silly example where we change the phase of each frequency bin
         // somewhat randomly. Uncomment the following line to enable.
-        //phase *= float(i);
+        phase *= float(i);
 
+        //magnitude = 0.0;
+        //phase = 0.0;
+        
         // Convert magnitude and phase back into a complex number.
         cdata[i] = std::polar(magnitude, phase);
     }
