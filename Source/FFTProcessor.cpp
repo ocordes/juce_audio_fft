@@ -20,8 +20,10 @@ FFTProcessor::FFTProcessor() :
     // window periodic, set size to 1025 but only use the first 1024 samples.
 }
 
-void FFTProcessor::reset()
+void FFTProcessor::reset(double newsampleRate)
 {
+    sampleRate = newsampleRate;
+    freqBin    = sampleRate / (fftSize >> 1);
     count = 0;
     pos = 0;
 
@@ -121,6 +123,16 @@ void FFTProcessor::processSpectrum(float* data, int numBins)
     // but it's easier to deal with this as std::complex values.
     auto* cdata = reinterpret_cast<std::complex<float>*>(data);
 
+    
+    // the number of frequency bins is windowsize +1,
+    // e.g. 1024 samples => 512+1 numBins
+    //
+    
+    double highpass = 1000.0;
+    int highpassbin = int(highpass/freqBin);
+    
+    DBG(highpassbin);
+    
         
     for (int i = 0; i < numBins; ++i) {
         // Usually we want to work with the magnitude and phase rather
@@ -132,11 +144,16 @@ void FFTProcessor::processSpectrum(float* data, int numBins)
 
         // Silly example where we change the phase of each frequency bin
         // somewhat randomly. Uncomment the following line to enable.
-        phase *= float(i);
+        //phase *= float(i);
 
         //magnitude = 0.0;
         //phase = 0.0;
         
+        if (i < highpassbin)
+        {
+            magnitude = 0.f;
+            phase = 0.f;
+        }
         // Convert magnitude and phase back into a complex number.
         cdata[i] = std::polar(magnitude, phase);
     }

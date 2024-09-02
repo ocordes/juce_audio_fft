@@ -100,8 +100,8 @@ void Juce_audio_fftAudioProcessor::prepareToPlay (double sampleRate, int samples
 {
     setLatencySamples(fft[0].getLatencyInSamples());
 
-    fft[0].reset();
-    fft[1].reset();
+    fft[0].reset(sampleRate);
+    fft[1].reset(sampleRate);
 }
 
 void Juce_audio_fftAudioProcessor::releaseResources()
@@ -163,8 +163,8 @@ void Juce_audio_fftAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
 
         sampleL = fft[0].processSample(sampleL, bypassed);
         sampleR = fft[1].processSample(sampleR, bypassed);
-        sampleL *= 0.1f;
-        sampleR *= 0.1f;
+        //sampleL *= 0.1f;
+        //sampleR *= 0.1f;
 
         channelL[sample] = sampleL;
         channelR[sample] = sampleR;
@@ -180,7 +180,9 @@ bool Juce_audio_fftAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* Juce_audio_fftAudioProcessor::createEditor()
 {
-    return new Juce_audio_fftAudioProcessorEditor (*this);
+    //return new Juce_audio_fftAudioProcessorEditor (*this);
+    
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
