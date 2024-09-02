@@ -24,7 +24,7 @@ public:
 
     int getLatencyInSamples() const { return fftSize; }
 
-    void reset();
+    void reset(double newsampleRate);
     float processSample(float sample, bool bypassed);
     void processBlock(float* data, int numSamples, bool bypassed);
 
@@ -51,6 +51,10 @@ private:
     // Write position in input FIFO and read position in output FIFO.
     int pos = 0;
 
+    // sampleRate of the calling processor
+    double sampleRate = 0.f;
+    double freqBin    = 0.f;
+    
     // Circular buffers for incoming and outgoing audio data.
     std::array<float, fftSize> inputFifo;
     std::array<float, fftSize> outputFifo;
